@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+                 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+             version="2.2">
+
+    <persistence-unit name="notenPU" transaction-type="RESOURCE_LOCAL">
+
+        <!-- Entidades registradas -->
+        <class>org.example.noten.model.Erabiltzailea</class>
+        <class>org.example.noten.model.Irakaslea</class>
+        <class>org.example.noten.model.Ikaslea</class>
+        <class>org.example.noten.model.Ikasturtea</class>
+        <class>org.example.noten.model.Ikasgaia</class>
+        <class>org.example.noten.model.EbaluazioZatia</class>
+        <class>org.example.noten.model.NotaId</class>
+        <class>org.example.noten.model.Nota</class>
+        <class>org.example.noten.model.Matrikula</class>
+        <class>org.example.noten.model.MatrikulaId</class>
+
+        <properties>
+            <!-- Conexión MySQL -->
+            <property name="javax.persistence.jdbc.driver"
+                      value="com.mysql.cj.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url"
+                      value="jdbc:mysql://localhost:3306/empresa?useSSL=false&amp;serverTimezone=Europe/Madrid&amp;characterEncoding=UTF-8&amp;allowPublicKeyRetrieval=true"/>
+            <property name="javax.persistence.jdbc.user"     value="root"/>
+            <property name="javax.persistence.jdbc.password" value="mysql"/>
+
+            <!-- Hibernate -->
+            <property name="hibernate.dialect"
+                      value="org.hibernate.dialect.MySQL8Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="none"/>
+            <property name="hibernate.show_sql"      value="true"/>
+            <property name="hibernate.format_sql"    value="true"/>
+        </properties>
+
+    </persistence-unit>
+
+</persistence>
