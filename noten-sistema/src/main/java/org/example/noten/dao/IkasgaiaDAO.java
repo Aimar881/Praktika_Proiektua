@@ -22,12 +22,39 @@ public class IkasgaiaDAO {
         }
     }
 
+    public List<Ikasgaia> findAll() {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            return em.createQuery("SELECT i FROM Ikasgaia i", Ikasgaia.class)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
     // Guardar una asignatura nueva
     public void save(Ikasgaia ikasgaia) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
             em.persist(ikasgaia);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public void delete(int id) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Ikasgaia ikasgaia = em.find(Ikasgaia.class, id);
+            if (ikasgaia != null) {
+                em.remove(ikasgaia);
+            }
             em.getTransaction().commit();
         } catch (Exception e) {
             em.getTransaction().rollback();

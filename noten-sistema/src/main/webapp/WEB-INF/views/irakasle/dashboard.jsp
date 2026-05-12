@@ -21,6 +21,7 @@
         <th>Ikasturtea</th>
         <th>Zatiak</th>
         <th>Notak</th>
+        <th>Ezabatu</th>
       </tr>
       <c:forEach var="ikasgaia" items="${ikasgaiak}">
         <tr>
@@ -28,6 +29,13 @@
           <td>${ikasgaia.ikasturtea.izena}</td>
           <td><a href="<%= request.getContextPath() %>/irakasle/zatiak?ikasgaiaId=${ikasgaia.id}">Zatiak</a></td>
           <td><a href="<%= request.getContextPath() %>/irakasle/notak?ikasgaiaId=${ikasgaia.id}">Notak</a></td>
+          <td>
+            <form action="<%= request.getContextPath() %>/irakasle/ikasgaia" method="post">
+              <input type="hidden" name="_method" value="DELETE"/>
+              <input type="hidden" name="id" value="${ikasgaia.id}"/>
+              <button type="submit" onclick="return confirm('Ziur zaude?')">Ezabatu</button>
+            </form>
+          </td>
         </tr>
       </c:forEach>
     </table>

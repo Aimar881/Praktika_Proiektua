@@ -32,10 +32,27 @@ public class IkasgaiaServlet extends HttpServlet {
                 .forward(request, response);
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        ikasgaiaDAO.delete(id);
+        response.sendRedirect(request.getContextPath() + "/irakasle/dashboard");
+    }
+
     // POST → guardar asignatura
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // Soporte para DELETE desde formulario HTML
+        String method = request.getParameter("_method");
+        if ("DELETE".equals(method)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            ikasgaiaDAO.delete(id);
+            response.sendRedirect(request.getContextPath() + "/irakasle/dashboard");
+            return;
+        }
 
         String izena = request.getParameter("izena");
         int ikasturteId = Integer.parseInt(request.getParameter("ikasturte_id"));

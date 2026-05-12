@@ -50,12 +50,32 @@
             <th>Ikaslea</th>
             <th>Zatia</th>
             <th>Nota</th>
+            <th>Ezabatu</th>
+            <th>Aldatu</th>
           </tr>
           <c:forEach var="nota" items="${notak}">
             <tr>
               <td>${nota.ikaslea.erabiltzailea.izenAbizenak}</td>
               <td>${nota.ebaluazioZatia.ebaluazioZenbakia}. Ebal - ${nota.ebaluazioZatia.izena}</td>
               <td>${nota.notaZenbakia}</td>
+              <td>
+                <form action="<%= request.getContextPath() %>/irakasle/notak" method="post">
+                  <input type="hidden" name="_method" value="DELETE"/>
+                  <input type="hidden" name="ikasleNan" value="${nota.ikaslea.nan}"/>
+                  <input type="hidden" name="zatiId" value="${nota.ebaluazioZatia.id}"/>
+                  <input type="hidden" name="ikasgaiaId" value="${ikasgaia.id}"/>
+                  <button type="submit" onclick="return confirm('Ziur zaude?')">Ezabatu</button>
+                </form>
+              </td>
+              <td>
+                <form action="<%= request.getContextPath() %>/irakasle/notak" method="post">
+                  <input type="hidden" name="ikasgaiaId" value="${ikasgaia.id}"/>
+                  <input type="hidden" name="ikasleNan" value="${nota.ikaslea.nan}"/>
+                  <input type="hidden" name="zatiId" value="${nota.ebaluazioZatia.id}"/>
+                  <input type="number" name="nota" value="${nota.notaZenbakia}" min="0" max="10" step="0.01" required/>
+                  <button type="submit">Aldatu</button>
+                </form>
+              </td>
             </tr>
           </c:forEach>
         </table>

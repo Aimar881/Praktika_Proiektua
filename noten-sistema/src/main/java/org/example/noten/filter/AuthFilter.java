@@ -1,5 +1,7 @@
 package org.example.noten.filter;
 
+import org.example.noten.model.Erabiltzailea;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -14,22 +16,46 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletRequest req  = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
         String uri = req.getRequestURI();
 
-        // Rutas que no necesitan login
+        // Rutas públicas
         boolean esPublica = uri.endsWith("/login") || uri.endsWith("/");
 
         HttpSession session = req.getSession(false);
-        boolean estaLogueado = session != null && session.getAttribute("erabiltzailea") != null;
+        Erabiltzailea erabiltzailea = (session != null)
+                ? (Erabiltzailea) session.getAttribute("erabiltzailea")
+                : null;
 
-        if (esPublica || estaLogueado) {
+        if (esPublica) {
             chain.doFilter(request, response);
-        } else {
-            res.sendRedirect(req.getContextPath() + "/login");
+            return;
         }
+
+        if (erabiltzailea == null) {
+            res.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        String rola = erabiltzailea.getRola().toString();
+
+        // Comprobación de rol según la ruta
+        if (uri.contains("/irakasle/") && !rola.equals("irakasle")) {
+            res.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+        if (uri.contains("/ikasle/") && !rola.equals("ikasle")) {
+            res.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+        if (uri.contains("/tutore/") && !rola.equals("tutore")) {
+            res.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        chain.doFilter(request, response);
     }
 
     @Override

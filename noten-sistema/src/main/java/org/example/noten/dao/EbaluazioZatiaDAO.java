@@ -35,10 +35,41 @@ public class EbaluazioZatiaDAO {
         }
     }
 
+    public void delete(int id) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            EbaluazioZatia zatia = em.find(EbaluazioZatia.class, id);
+            if (zatia != null) {
+                em.remove(zatia);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
     public EbaluazioZatia findById(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             return em.find(EbaluazioZatia.class, id);
+        } finally {
+            em.close();
+        }
+    }
+    public double getSumaPisuak(int ikasgaiaId, int ebaluazioZenbakia) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            Double suma = em.createQuery(
+                            "SELECT COALESCE(SUM(e.pisua), 0) FROM EbaluazioZatia e WHERE e.ikasgaia.id = :ikasgaiaId AND e.ebaluazioZenbakia = :ebaluazioa",
+                            Double.class)
+                    .setParameter("ikasgaiaId", ikasgaiaId)
+                    .setParameter("ebaluazioa", ebaluazioZenbakia)
+                    .getSingleResult();
+            return suma;
         } finally {
             em.close();
         }

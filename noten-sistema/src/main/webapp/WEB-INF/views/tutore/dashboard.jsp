@@ -8,7 +8,6 @@
 
 <h2>Tutore panela</h2>
 
-<!-- Selector de alumno -->
 <form action="<%= request.getContextPath() %>/tutore/dashboard" method="get">
     <label>Ikaslea aukeratu:</label>
     <select name="ikasleNan">
@@ -25,31 +24,47 @@
 
 <br/>
 
-<!-- Boletín del alumno seleccionado -->
 <c:if test="${not empty notak}">
     <h3>Buletina — ${notak[0].ikaslea.erabiltzailea.izenAbizenak}</h3>
-    <table border="1">
-        <tr>
-            <th>Ikasgaia</th>
-            <th>Ebaluazioa</th>
-            <th>Zatia</th>
-            <th>Pisua</th>
-            <th>Nota</th>
-        </tr>
-        <c:forEach var="nota" items="${notak}">
+
+    <c:set var="ikasgaiaAktual" value=""/>
+
+    <c:forEach var="nota" items="${notak}">
+
+        <c:if test="${nota.ebaluazioZatia.ikasgaia.izena != ikasgaiaAktual}">
+            <c:if test="${ikasgaiaAktual != ''}">
+                </table>
+                <p><strong>Nota finala: ${notaFinalak[nota.ebaluazioZatia.ikasgaia.id]}</strong></p>
+                <br/>
+            </c:if>
+            <h4>${nota.ebaluazioZatia.ikasgaia.izena}</h4>
+            <table border="1">
             <tr>
-                <td>${nota.ebaluazioZatia.ikasgaia.izena}</td>
-                <td>${nota.ebaluazioZatia.ebaluazioZenbakia}. Ebaluazioa</td>
-                <td>${nota.ebaluazioZatia.izena}</td>
-                <td>${nota.ebaluazioZatia.pisua}</td>
-                <td>${nota.notaZenbakia}</td>
+                <th>Ebaluazioa</th>
+                <th>Zatia</th>
+                <th>Pisua</th>
+                <th>Nota</th>
             </tr>
-        </c:forEach>
+            <c:set var="ikasgaiaAktual" value="${nota.ebaluazioZatia.ikasgaia.izena}"/>
+        </c:if>
+
+        <tr>
+            <td>${nota.ebaluazioZatia.ebaluazioZenbakia}. Ebaluazioa</td>
+            <td>${nota.ebaluazioZatia.izena}</td>
+            <td>${nota.ebaluazioZatia.pisua}</td>
+            <td>${nota.notaZenbakia}</td>
+        </tr>
+
+    </c:forEach>
+
     </table>
+    <p><strong>Nota finala: ${notaFinalak[notak[notak.size()-1].ebaluazioZatia.ikasgaia.id]}</strong></p>
 
     <br/>
     <a href="javascript:window.print()">🖨️ Inprimatu</a>
 </c:if>
+
+<a href="<%= request.getContextPath() %>/tutore/usuarios">Erabiltzaileak kudeatu</a><br/><br/>
 
 <br/>
 <a href="<%= request.getContextPath() %>/logout">Irten</a>

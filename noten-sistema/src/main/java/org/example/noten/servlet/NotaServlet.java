@@ -48,6 +48,16 @@ public class NotaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        String method = request.getParameter("_method");
+        if ("DELETE".equals(method)) {
+            String ikasleNan = request.getParameter("ikasleNan");
+            int zatiId       = Integer.parseInt(request.getParameter("zatiId"));
+            int ikasgaiaId   = Integer.parseInt(request.getParameter("ikasgaiaId"));
+            notaDAO.delete(ikasleNan, zatiId);
+            response.sendRedirect(request.getContextPath() + "/irakasle/notak?ikasgaiaId=" + ikasgaiaId);
+            return;
+        }
+
         int ikasgaiaId  = Integer.parseInt(request.getParameter("ikasgaiaId"));
         String ikasleNan = request.getParameter("ikasleNan");
         int zatiId      = Integer.parseInt(request.getParameter("zatiId"));

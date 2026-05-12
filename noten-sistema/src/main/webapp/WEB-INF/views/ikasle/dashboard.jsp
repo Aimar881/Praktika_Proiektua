@@ -8,29 +8,48 @@
 
 <h2>Ongi etorri, <%= ((org.example.noten.model.Erabiltzailea) session.getAttribute("erabiltzailea")).getIzenAbizenak() %>!</h2>
 
-<h3>Nire notak</h3>
-
 <c:choose>
     <c:when test="${empty notak}">
         <p>Ez daukazu notarik oraindik.</p>
     </c:when>
     <c:otherwise>
-        <table border="1">
-            <tr>
-                <th>Ikasgaia</th>
-                <th>Ebaluazioa</th>
-                <th>Zatia</th>
-                <th>Nota</th>
-            </tr>
-            <c:forEach var="nota" items="${notak}">
+        <c:set var="ikasgaiaAktual" value="-1"/>
+
+        <c:forEach var="nota" items="${notak}" varStatus="loop">
+
+            <c:if test="${nota.ebaluazioZatia.ikasgaia.id != ikasgaiaAktual}">
+                <%-- Cerrar tabla anterior si no es la primera --%>
+                <c:if test="${ikasgaiaAktual != '-1'}">
+                    </table>
+                    <p><strong>Nota finala: ${notaFinalak[ikasgaiaAktual]}</strong></p>
+                    <br/>
+                </c:if>
+                <%-- Abrir nueva asignatura --%>
+                <h3>${nota.ebaluazioZatia.ikasgaia.izena}</h3>
+                <table border="1">
                 <tr>
-                    <td>${nota.ebaluazioZatia.ikasgaia.izena}</td>
-                    <td>${nota.ebaluazioZatia.ebaluazioZenbakia}. Ebaluazioa</td>
-                    <td>${nota.ebaluazioZatia.izena}</td>
-                    <td>${nota.notaZenbakia}</td>
+                    <th>Ebaluazioa</th>
+                    <th>Zatia</th>
+                    <th>Pisua %</th>
+                    <th>Nota</th>
                 </tr>
-            </c:forEach>
-        </table>
+                <c:set var="ikasgaiaAktual" value="${nota.ebaluazioZatia.ikasgaia.id}"/>
+            </c:if>
+
+            <tr>
+                <td>${nota.ebaluazioZatia.ebaluazioZenbakia}. Ebaluazioa</td>
+                <td>${nota.ebaluazioZatia.izena}</td>
+                <td>${nota.ebaluazioZatia.pisua}%</td>
+                <td>${nota.notaZenbakia}</td>
+            </tr>
+
+            <%-- Cerrar la última tabla --%>
+            <c:if test="${loop.last}">
+                </table>
+                <p><strong>Nota finala: ${notaFinalak[ikasgaiaAktual]}</strong></p>
+            </c:if>
+
+        </c:forEach>
     </c:otherwise>
 </c:choose>
 

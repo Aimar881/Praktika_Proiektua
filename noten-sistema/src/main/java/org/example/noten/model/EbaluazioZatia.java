@@ -1,6 +1,9 @@
 package org.example.noten.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -17,9 +20,12 @@ public class EbaluazioZatia {
     private Ikasgaia ikasgaia;
 
     @Column(name = "izena", length = 100)
+    @NotBlank(message = "Izena ezin da hutsik egon")
     private String izena;
 
     @Column(name = "pisua")
+    @DecimalMin(value = "0.1", message = "Pisuak 0.1 baino handiagoa izan behar du")
+    @DecimalMax(value = "1.0", message = "Pisuak 1.0 baino txikiagoa izan behar du")
     private double pisua;
 
     @Column(name = "ebaluazio_zenbakia")
@@ -28,7 +34,6 @@ public class EbaluazioZatia {
     @OneToMany(mappedBy = "ebaluazioZatia")
     private List<Nota> notak;
 
-    // Getters y Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

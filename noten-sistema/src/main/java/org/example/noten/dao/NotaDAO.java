@@ -31,6 +31,23 @@ public class NotaDAO {
         }
     }
 
+    public void delete(String ikasleNan, int zatiId) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Nota nota = em.find(Nota.class, new NotaId(ikasleNan, zatiId));
+            if (nota != null) {
+                em.remove(nota);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
     public void saveOrUpdate(Nota nota) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
