@@ -60,6 +60,26 @@ public class EbaluazioZatiaDAO {
             em.close();
         }
     }
+
+    public double getSumaPisuakSinId(int ikasgaiaId, int ebaluazioZenbakia, int excludeId) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            Double suma = em.createQuery(
+                            "SELECT COALESCE(SUM(e.pisua), 0) FROM EbaluazioZatia e " +
+                                    "WHERE e.ikasgaia.id = :ikasgaiaId " +
+                                    "AND e.ebaluazioZenbakia = :ebaluazioa " +
+                                    "AND e.id != :excludeId",
+                            Double.class)
+                    .setParameter("ikasgaiaId", ikasgaiaId)
+                    .setParameter("ebaluazioa", ebaluazioZenbakia)
+                    .setParameter("excludeId", excludeId)
+                    .getSingleResult();
+            return suma;
+        } finally {
+            em.close();
+        }
+    }
+
     public double getSumaPisuak(int ikasgaiaId, int ebaluazioZenbakia) {
         EntityManager em = JPAUtil.getEntityManager();
         try {

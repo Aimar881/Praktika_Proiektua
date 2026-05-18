@@ -3,71 +3,87 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
-<head><title>Tutore - Dashboard</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Tutore - Dashboard</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
+</head>
 <body>
 
-<h2>Tutore panela</h2>
+<header>
+    <h1>Noten Sistema</h1>
+    <nav>
+        <a href="<%= request.getContextPath() %>/tutore/usuarios" class="btn">Erabiltzaileak</a>
+        <a href="<%= request.getContextPath() %>/logout" class="btn-logout">Irten</a>
+    </nav>
+</header>
 
-<form action="<%= request.getContextPath() %>/tutore/dashboard" method="get">
-    <label>Ikaslea aukeratu:</label>
-    <select name="ikasleNan">
-        <option value="">-- Aukeratu --</option>
-        <c:forEach var="ikaslea" items="${ikasleak}">
-            <option value="${ikaslea.nan}"
-                    <c:if test="${ikaslea.nan == ikasleNanSelektatua}">selected</c:if>>
-                    ${ikaslea.erabiltzailea.izenAbizenak} (${ikaslea.taldea})
-            </option>
-        </c:forEach>
-    </select>
-    <input type="submit" value="Ikusi"/>
-</form>
+<div class="container">
 
-<br/>
+    <h2>Tutore panela</h2>
 
-<c:if test="${not empty notak}">
-    <h3>Buletina — ${notak[0].ikaslea.erabiltzailea.izenAbizenak}</h3>
+    <div class="card">
+        <form action="<%= request.getContextPath() %>/tutore/dashboard" method="get" style="display:flex; gap:12px; align-items:flex-end;">
+            <div style="flex:1;">
+                <label>Ikaslea aukeratu:</label>
+                <select name="ikasleNan" style="margin:0;">
+                    <option value="">-- Aukeratu --</option>
+                    <c:forEach var="ikaslea" items="${ikasleak}">
+                        <option value="${ikaslea.nan}"
+                                <c:if test="${ikaslea.nan == ikasleNanSelektatua}">selected</c:if>>
+                                ${ikaslea.erabiltzailea.izenAbizenak} (${ikaslea.taldea})
+                        </option>
+                    </c:forEach>
+                </select>
+            </div>
+            <input type="submit" value="Ikusi" style="margin:0;"/>
+        </form>
+    </div>
 
-    <c:set var="ikasgaiaAktual" value=""/>
+    <c:if test="${not empty notak}">
 
-    <c:forEach var="nota" items="${notak}">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;" class="no-print">
+            <h2 style="margin:0;">Buletina — ${notak[0].ikaslea.erabiltzailea.izenAbizenak}</h2>
+            <a href="javascript:window.print()" class="btn btn-secondary">🖨️ Inprimatu</a>
+        </div>
 
-        <c:if test="${nota.ebaluazioZatia.ikasgaia.izena != ikasgaiaAktual}">
-            <c:if test="${ikasgaiaAktual != ''}">
-                </table>
-                <p><strong>Nota finala: ${notaFinalak[nota.ebaluazioZatia.ikasgaia.id]}</strong></p>
-                <br/>
+        <c:set var="ikasgaiaAktual" value=""/>
+
+        <c:forEach var="nota" items="${notak}" varStatus="loop">
+
+            <c:if test="${nota.ebaluazioZatia.ikasgaia.izena != ikasgaiaAktual}">
+                <c:if test="${ikasgaiaAktual != ''}">
+                    </table>
+                    <div class="nota-finala">Nota finala: ${notaFinalak[nota.ebaluazioZatia.ikasgaia.id]}</div>
+                </c:if>
+                <h3>${nota.ebaluazioZatia.ikasgaia.izena}</h3>
+                <table>
+                <tr>
+                    <th>Ebaluazioa</th>
+                    <th>Zatia</th>
+                    <th>Pisua %</th>
+                    <th>Nota</th>
+                </tr>
+                <c:set var="ikasgaiaAktual" value="${nota.ebaluazioZatia.ikasgaia.izena}"/>
             </c:if>
-            <h4>${nota.ebaluazioZatia.ikasgaia.izena}</h4>
-            <table border="1">
+
             <tr>
-                <th>Ebaluazioa</th>
-                <th>Zatia</th>
-                <th>Pisua</th>
-                <th>Nota</th>
+                <td>${nota.ebaluazioZatia.ebaluazioZenbakia}. Ebaluazioa</td>
+                <td>${nota.ebaluazioZatia.izena}</td>
+                <td>${nota.ebaluazioZatia.pisua}%</td>
+                <td><strong>${nota.notaZenbakia}</strong></td>
             </tr>
-            <c:set var="ikasgaiaAktual" value="${nota.ebaluazioZatia.ikasgaia.izena}"/>
-        </c:if>
 
-        <tr>
-            <td>${nota.ebaluazioZatia.ebaluazioZenbakia}. Ebaluazioa</td>
-            <td>${nota.ebaluazioZatia.izena}</td>
-            <td>${nota.ebaluazioZatia.pisua}</td>
-            <td>${nota.notaZenbakia}</td>
-        </tr>
+            <c:if test="${loop.last}">
+                </table>
+                <div class="nota-finala">Nota finala: ${notaFinalak[notak[notak.size()-1].ebaluazioZatia.ikasgaia.id]}</div>
+            </c:if>
 
-    </c:forEach>
+        </c:forEach>
 
-    </table>
-    <p><strong>Nota finala: ${notaFinalak[notak[notak.size()-1].ebaluazioZatia.ikasgaia.id]}</strong></p>
+    </c:if>
 
-    <br/>
-    <a href="javascript:window.print()">🖨️ Inprimatu</a>
-</c:if>
-
-<a href="<%= request.getContextPath() %>/tutore/usuarios">Erabiltzaileak kudeatu</a><br/><br/>
-
-<br/>
-<a href="<%= request.getContextPath() %>/logout">Irten</a>
+</div>
 
 </body>
 </html>

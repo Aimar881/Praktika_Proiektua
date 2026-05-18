@@ -3,28 +3,44 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
-<head><title>Ikasgai berria</title></head>
+<head>
+  <meta charset="UTF-8">
+  <title>Ikasgai berria</title>
+  <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
+</head>
 <body>
 
-<h2>Ikasgai berria sortu</h2>
+<header>
+  <h1>Noten Sistema</h1>
+  <nav>
+    <a href="<%= request.getContextPath() %>/logout" class="btn-logout">Irten</a>
+  </nav>
+</header>
 
-<form action="<%= request.getContextPath() %>/irakasle/ikasgaia" method="post">
+<div class="container-sm">
 
-  <label>Ikasgaiaren izena:</label><br/>
-  <input type="text" name="izena" required/><br/><br/>
+  <h2>Ikasgai berria sortu</h2>
 
-  <label>Ikasturtea:</label><br/>
-  <select name="ikasturte_id" required>
-    <c:forEach var="ikasturtea" items="${ikasturteak}">
-      <option value="${ikasturtea.id}">${ikasturtea.izena}</option>
-    </c:forEach>
-  </select><br/><br/>
+  <div class="card">
+    <form action="<%= request.getContextPath() %>/irakasle/ikasgaia" method="post">
 
-  <input type="submit" value="Gorde"/>
-</form>
+      <label>Ikasgaiaren izena:</label>
+      <input type="text" name="izena" required/>
 
-<br/>
-<a href="<%= request.getContextPath() %>/irakasle/dashboard">Atzera</a>
+      <label>Ikasturtea:</label>
+      <select name="ikasturte_id" required>
+        <c:forEach var="ikasturtea" items="${ikasturteak}">
+          <option value="${ikasturtea.id}">${ikasturtea.izena}</option>
+        </c:forEach>
+      </select>
+
+      <input type="submit" value="Gorde" style="width:100%;"/>
+    </form>
+  </div>
+
+  <a href="<%= request.getContextPath() %>/irakasle/dashboard" class="back-link">← Atzera</a>
+
+</div>
 
 </body>
 </html>

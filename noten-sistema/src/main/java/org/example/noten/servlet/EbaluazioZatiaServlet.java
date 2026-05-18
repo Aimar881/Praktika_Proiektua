@@ -52,6 +52,22 @@ public class EbaluazioZatiaServlet extends HttpServlet {
             int ikasgaiaId = Integer.parseInt(request.getParameter("ikasgaiaId"));
             String izena   = request.getParameter("izena");
             double pisua   = Double.parseDouble(request.getParameter("pisua"));
+            int ebaluazioZenb = Integer.parseInt(request.getParameter("ebaluazioZenbakia"));
+
+            // Suma actual SIN contar el zatia que estamos editando
+            double sumaAktual = zatiaDAO.getSumaPisuakSinId(ikasgaiaId, ebaluazioZenb, id);
+
+            if (sumaAktual + pisua > 100) {
+                Ikasgaia ikasgaia = ikasgaiaDAO.findById(ikasgaiaId);
+                request.setAttribute("erroreak", java.util.Collections.singleton(
+                        ebaluazioZenb + ". ebaluazioak dagoeneko %" + sumaAktual + " dauka (zati honek kenduta). Ezin da %" + pisua + " jarri."
+                ));
+                request.setAttribute("ikasgaia", ikasgaia);
+                request.setAttribute("zatiak", zatiaDAO.findByIkasgaia(ikasgaiaId));
+                request.getRequestDispatcher("/WEB-INF/views/irakasle/zatiak.jsp")
+                        .forward(request, response);
+                return;
+            }
 
             EntityManager em = JPAUtil.getEntityManager();
             try {

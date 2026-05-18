@@ -4,24 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Login - Noten Sistema</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
 </head>
 <body>
 
-<h2>Sartu / Iniciar sesión</h2>
+<div class="container">
+    <div class="card" style="max-width: 400px; margin: 80px auto;">
+        <h2>Sartu / Iniciar sesión</h2>
 
-<form action="login" method="post">
-    <label>NAN:</label>
-    <input type="text" name="nan" required/><br/><br/>
+        <% if (request.getAttribute("errorMezua") != null) { %>
+        <div class="error"><%= request.getAttribute("errorMezua") %></div>
+        <% } %>
 
-    <label>Pasahitza:</label>
-    <input type="password" name="pasahitza" required/><br/><br/>
+        <form action="<%= request.getContextPath() %>/login" method="post">
+            <label>NAN:</label>
+            <input type="text" name="nan" required/>
 
-    <input type="submit" value="Sartu"/>
-</form>
+            <label>Pasahitza:</label>
+            <input type="password" name="pasahitza" required/>
 
-<% if (request.getAttribute("errorMezua") != null) { %>
-<p style="color:red;"><%= request.getAttribute("errorMezua") %></p>
-<% } %>
+            <input type="submit" value="Sartu" style="width:100%;"/>
+        </form>
+    </div>
+</div>
 
 </body>
 </html>
