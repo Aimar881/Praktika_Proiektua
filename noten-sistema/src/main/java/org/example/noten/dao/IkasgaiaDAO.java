@@ -6,9 +6,17 @@ import org.example.noten.util.JPAUtil;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+/**
+ * DAO klasea ikasgaien datuak kudeatzeko.
+ * Irakasleek beren ikasgaiak sortu, bilatu eta ezabatzeko erabiltzen da.
+ */
 public class IkasgaiaDAO {
 
-    // Obtener todas las asignaturas de un profesor
+    /**
+     * Irakasle bati dagozkion ikasgai guztiak itzultzen ditu.
+     *
+     * @param irakasleNan Irakaslearen NAN zenbakia
+     */
     public List<Ikasgaia> findByIrakasle(String irakasleNan) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
@@ -22,6 +30,10 @@ public class IkasgaiaDAO {
         }
     }
 
+    /**
+     * Datu-baseko ikasgai guztiak itzultzen ditu.
+     * Tutoreek matrikulazioan erabiltzeko.
+     */
     public List<Ikasgaia> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
@@ -32,7 +44,11 @@ public class IkasgaiaDAO {
         }
     }
 
-    // Guardar una asignatura nueva
+    /**
+     * Ikasgai berri bat datu-basean gordetzen du.
+     *
+     * @param ikasgaia Gordetzeko ikasgaia
+     */
     public void save(Ikasgaia ikasgaia) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
@@ -47,6 +63,12 @@ public class IkasgaiaDAO {
         }
     }
 
+    /**
+     * Ikasgai bat datu-basetik ezabatzen du ID-aren arabera.
+     * Ikasgaiari lotutako zatiak eta notak ere ezabatzen dira (CASCADE).
+     *
+     * @param id Ezabatzeko ikasgaiaren ID zenbakia
+     */
     public void delete(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
@@ -64,7 +86,11 @@ public class IkasgaiaDAO {
         }
     }
 
-    // Buscar por id
+    /**
+     * Ikasgai bat ID-aren arabera bilatzen du.
+     *
+     * @param id Bilatzeko ikasgaiaren ID zenbakia
+     */
     public Ikasgaia findById(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
